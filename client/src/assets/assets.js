@@ -33,6 +33,7 @@ import location_icon_colored from "./location_icon_colored.svg"
 import testimonial_image_1 from "./testimonial_image_1.png"
 import testimonial_image_2 from "./testimonial_image_2.png"
 import main_car from "./main_car.png"
+import main_carr from "./main_carr.png"
 import banner_car_image from "./banner_car_image.png"
 import user_profile from "./user_profile.png"
 import upload_icon from "./upload_icon.svg"
@@ -86,7 +87,8 @@ export const assets = {
     user_profile,
     car_image2,
     car_image3,
-    car_image4
+    car_image4,
+    main_carr,
 
 }
 
