@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+
 import gmail_logo from "./gmail_logo.svg";
 import facebook_logo from "./facebook_logo.svg";
 import instagram_logo from "./instagram_logo.svg";
@@ -35,7 +35,6 @@ import testimonial_image_2 from "./testimonial_image_2.png"
 import main_car from "./main_car.png"
 import main_carr from "./main_carr.png"
 import banner_car_image from "./banner_car_image.png"
-import user_profile from "./user_profile.png"
 import upload_icon from "./upload_icon.svg"
 import car_image1 from "./car_image1.png"
 import car_image2 from "./car_image2.png"
@@ -46,7 +45,7 @@ export const cityList = ['New York', 'Los Angeles', 'Houston', 'Chicago']
 
 export const assets = {
 
-    logo,
+
     gmail_logo,
     facebook_logo,
     instagram_logo,
@@ -84,7 +83,6 @@ export const assets = {
     banner_car_image,
     car_image1,
     upload_icon,
-    user_profile,
     car_image2,
     car_image3,
     car_image4,
@@ -111,7 +109,7 @@ export const dummyUserData = {
     "name": "GreatStack",
     "email": "admin@example.com",
     "role": "owner",
-    "image": user_profile,
+    "image": testimonial_image_1,
 }
 
 export const dummyCarData = [
