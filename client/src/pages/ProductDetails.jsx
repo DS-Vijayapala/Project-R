@@ -34,7 +34,7 @@ const ProductDetails = () => {
             <button
                 onClick={() => navigate(-1)}
                 className="flex items-center gap-2 mb-6 text-green-700
-                 hover:text-green-900 transition-all"
+                 hover:text-green-900 transition-all cursor-pointer"
             >
 
                 <img
