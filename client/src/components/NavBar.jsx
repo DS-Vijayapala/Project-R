@@ -177,7 +177,7 @@ const NavBar = ({ setShowLogin }) => {
                             <hr className="border-green-100" />
 
                             <Link
-                                to="/owner/dashboard"
+                                to="/owner"
                                 className="text-sm font-medium text-slate-700 hover:text-green-700"
                                 onClick={() => setMobileOpen(false)}
                             >
