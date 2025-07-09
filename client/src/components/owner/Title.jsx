@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Title = ({ title, subTitle }) => {
+const Title = ({ title, subTitle, align }) => {
 
     return (
 
@@ -12,7 +12,7 @@ const Title = ({ title, subTitle }) => {
             >
 
                 <h1
-                    className="font-extrabold text-4xl md:text-5xl 
+                    className="font-extrabold text-3xl md:text-3xl 
                bg-gradient-to-r from-pink-500 via-yellow-500 to-indigo-500 
                text-transparent bg-clip-text leading-snug tracking-tight"
                 >
@@ -23,7 +23,7 @@ const Title = ({ title, subTitle }) => {
 
                 <p className="text-sm md:text-base text-slate-600 mt-3 max-w-xl">
 
-                    {subtitle}
+                    {subTitle}
 
                 </p>
 
