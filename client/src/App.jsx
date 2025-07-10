@@ -11,6 +11,7 @@ import Dashboard from './pages/owner/Dashboard'
 import AddProduct from './pages/owner/AddProduct'
 import ManageProducts from './pages/owner/ManageProducts'
 import ManageBookings from './pages/owner/ManageBookings'
+import Login from './components/Login'
 
 const App = () => {
 
@@ -21,6 +22,8 @@ const App = () => {
   return (
 
     <>
+
+      {showLogin && <Login setShowLogin={setShowLogin} />}
 
       {!isOwnerPath && <NavBar setShowLogin={setShowLogin} />}
 
