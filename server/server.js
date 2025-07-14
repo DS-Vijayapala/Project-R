@@ -4,15 +4,21 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import compression from 'compression';
 import 'dotenv/config';
+import connectDB from './configs/db.js';
 
 // ─────────────────────────────────────────────────────
-
 // Initialize Express App
 
 const app = express();
 
 // ─────────────────────────────────────────────────────
+// Connect DataBase
 
+await connectDB()
+
+
+
+// ─────────────────────────────────────────────────────
 // Middleware
 
 app.use(cors());
@@ -22,7 +28,6 @@ app.use(compression());
 app.use(express.json());
 
 // ─────────────────────────────────────────────────────
-
 // Health Check Route
 
 app.get('/', (req, res) => {
@@ -33,7 +38,6 @@ app.get('/', (req, res) => {
 
 
 // ─────────────────────────────────────────────────────
-
 // Server Start
 
 const PORT = process.env.PORT || 3000;
