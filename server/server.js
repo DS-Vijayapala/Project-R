@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import compression from 'compression';
 import 'dotenv/config';
 import connectDB from './configs/db.js';
+import userRouter from './routes/user.routes.js';
 
 // ─────────────────────────────────────────────────────
 // Initialize Express App
@@ -35,6 +36,11 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'Rentzee Server is Running' });
 
 });
+
+// ─────────────────────────────────────────────────────
+// Add Routes
+
+app.use('/api/user', userRouter)
 
 
 // ─────────────────────────────────────────────────────
