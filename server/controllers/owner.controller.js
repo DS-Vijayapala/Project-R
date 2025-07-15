@@ -1,9 +1,6 @@
 import User from "../models/user.models.js"
 
 
-
-
-
 // Change Role To Owner
 
 export const changeRoleToOwner = async (req, res) => {
@@ -34,3 +31,34 @@ export const changeRoleToOwner = async (req, res) => {
     }
 
 };
+
+// API To List New Product
+
+export const addNewProduct = async (req, res) => {
+
+    try {
+
+        const { _id } = req.user
+
+        let product = JSON.parse(req.body.productData)
+
+        const imageFile = req.file;
+
+
+
+
+
+    } catch (error) {
+
+        console.log(error.message);
+        res.json({
+
+            success: false,
+            message: "Failed to Add New Product.",
+            error: error.message
+
+        });
+
+    }
+
+}
