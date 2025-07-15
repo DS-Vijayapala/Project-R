@@ -6,6 +6,7 @@ import compression from 'compression';
 import 'dotenv/config';
 import connectDB from './configs/db.js';
 import userRouter from './routes/user.routes.js';
+import ownerRouter from './routes/owner.routes.js';
 
 // ─────────────────────────────────────────────────────
 // Initialize Express App
@@ -38,9 +39,10 @@ app.get('/', (req, res) => {
 });
 
 // ─────────────────────────────────────────────────────
-// Add Routes
+// Add API Routes
 
 app.use('/api/user', userRouter)
+app.use('/api/owner', ownerRouter)
 
 
 // ─────────────────────────────────────────────────────
