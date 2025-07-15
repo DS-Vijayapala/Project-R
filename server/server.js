@@ -7,6 +7,7 @@ import 'dotenv/config';
 import connectDB from './configs/db.js';
 import userRouter from './routes/user.routes.js';
 import ownerRouter from './routes/owner.routes.js';
+import connectCloudinary from './configs/cloudinary.js'
 
 // ─────────────────────────────────────────────────────
 // Initialize Express App
@@ -14,11 +15,10 @@ import ownerRouter from './routes/owner.routes.js';
 const app = express();
 
 // ─────────────────────────────────────────────────────
-// Connect DataBase
+// Connect DataBase And Cloudinary
 
 await connectDB()
-
-
+await connectCloudinary()
 
 // ─────────────────────────────────────────────────────
 // Middleware
