@@ -141,3 +141,38 @@ export const addNewProduct = async (req, res) => {
 
 };
 
+// API To List (GET) Owner Product List
+
+export const getOwnerProducts = async (req, res) => {
+
+    try {
+
+        const { _id } = req.user;
+
+        const products = await Product.find({ owner: _id });
+
+        res.json({
+
+            success: true,
+            products,
+            message: 'Owner products fetched successfully.',
+
+        });
+
+    } catch (error) {
+
+        console.error(error.message);
+
+        res.json({
+
+            success: false,
+            message: 'Failed to fetch owner products.',
+            error: error.message,
+
+        });
+
+    }
+
+};
+
+
