@@ -1,6 +1,7 @@
 import express from 'express'
 import { protect } from '../middleware/auth.middleware.js';
-import { changeRoleToOwner } from '../controllers/owner.controller.js';
+import { changeRoleToOwner, addNewProduct } from '../controllers/owner.controller.js';
+import Upload from '../middleware/multer.middleware.js'
 
 
 const ownerRouter = express.Router();
@@ -9,6 +10,9 @@ const ownerRouter = express.Router();
 
 ownerRouter.post('/change-role', protect, changeRoleToOwner)
 
+// List New Product
+
+ownerRouter.post('/add-product', Upload.single("image"), protect, addNewProduct)
 
 
 
