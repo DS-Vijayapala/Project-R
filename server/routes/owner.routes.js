@@ -10,7 +10,7 @@ const ownerRouter = express.Router();
 
 ownerRouter.post('/change-role', protect, changeRoleToOwner)
 
-// List New Product
+// Add New Product
 
 ownerRouter.post('/add-product', Upload.single("image"), protect, addNewProduct)
 
