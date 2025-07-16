@@ -1,6 +1,6 @@
 import express from 'express'
 import { protect } from '../middleware/auth.middleware.js';
-import { changeRoleToOwner, addNewProduct } from '../controllers/owner.controller.js';
+import { changeRoleToOwner, addNewProduct, getOwnerProducts } from '../controllers/owner.controller.js';
 import Upload from '../middleware/multer.middleware.js'
 
 
@@ -14,7 +14,8 @@ ownerRouter.post('/change-role', protect, changeRoleToOwner)
 
 ownerRouter.post('/add-product', Upload.single("image"), protect, addNewProduct)
 
+// GET Owner Product List
 
-
+ownerRouter.get('/get-products-list', protect, getOwnerProducts)
 
 export default ownerRouter
