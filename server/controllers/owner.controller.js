@@ -33,7 +33,7 @@ export const changeRoleToOwner = async (req, res) => {
 
 };
 
-// API To List New Product
+// API To Add New Product
 
 export const addNewProduct = async (req, res) => {
 
@@ -140,3 +140,4 @@ export const addNewProduct = async (req, res) => {
     }
 
 };
+
