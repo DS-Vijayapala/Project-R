@@ -175,4 +175,54 @@ export const getOwnerProducts = async (req, res) => {
 
 };
 
+// API To Toggle Car Availability
+
+export const toggleCarAvailability = async (req, res) => {
+
+
+    try {
+
+        const { _id } = req.user;
+
+        const carId = req.body
+
+        const products = await Product.findById({ carId });
+
+        // Checking Is Car Belongs To The User
+
+        if (products.owner.toString() !== _id.toString()) {
+
+            return res.json({
+
+                success: false,
+                message: 'Owner products fetched successfully.',
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+            products,
+            message: 'Owner products fetched successfully.',
+
+        });
+
+    } catch (error) {
+
+        console.error(error.message);
+
+        res.json({
+
+            success: false,
+            message: 'Failed to fetch owner products.',
+            error: error.message,
+
+        });
+
+    }
+
+}
+
 
