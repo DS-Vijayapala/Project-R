@@ -1,5 +1,5 @@
-import User from "../models/user.models.js"
-import Product from "../models/products.models.js"
+import User from "../models/user.model.js"
+import Product from "../models/products.model.js"
 import { v2 as cloudinary } from 'cloudinary'
 
 // Change Role To Owner
