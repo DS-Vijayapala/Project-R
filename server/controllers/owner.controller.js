@@ -175,37 +175,53 @@ export const getOwnerProducts = async (req, res) => {
 
 };
 
-// API To Toggle Car Availability
+// API To Toggle Product Availability
 
-export const toggleCarAvailability = async (req, res) => {
-
+export const toggleProductAvailability = async (req, res) => {
 
     try {
 
         const { _id } = req.user;
 
-        const carId = req.body
+        const { productId } = req.body;
 
-        const products = await Product.findById({ carId });
+        const product = await Product.findById(productId);
 
-        // Checking Is Car Belongs To The User
-
-        if (products.owner.toString() !== _id.toString()) {
+        if (!product) {
 
             return res.json({
 
                 success: false,
-                message: 'Owner products fetched successfully.',
+                message: 'Product not found in database.',
 
             });
 
         }
 
+        // Verify car ownership
+
+        if (product.owner.toString() !== _id.toString()) {
+
+            return res.json({
+
+                success: false,
+                message: 'Unauthorized Owner.'
+
+            });
+
+        }
+
+        // Toggle availability
+
+        product.isAvaliable = !product.isAvaliable;
+
+        await product.save();
+
         res.json({
 
             success: true,
-            products,
-            message: 'Owner products fetched successfully.',
+            product,
+            message: `Product availability status updated successfully.`,
 
         });
 
@@ -216,7 +232,112 @@ export const toggleCarAvailability = async (req, res) => {
         res.json({
 
             success: false,
-            message: 'Failed to fetch owner products.',
+            message: 'Unable to toggle Product availability.',
+            error: error.message,
+
+        });
+
+    }
+
+};
+
+// API To Delete a Product
+
+export const deleteProduct = async (req, res) => {
+
+    try {
+
+        const { _id } = req.user;
+
+        const { carId } = req.body;
+
+        const product = await Product.findById(carId);
+
+        if (!product) {
+
+            return res.json({
+
+                success: false,
+                message: 'Product not found in database.',
+
+            });
+
+        }
+
+        // Verify Product ownership
+
+        if (product.owner.toString() !== _id.toString()) {
+
+            return res.json({
+
+                success: false,
+                message: 'Unauthorized Owner.'
+
+            });
+
+        }
+
+        product.owner = null
+
+        product.isAvaliable = false
+
+        await product.save();
+
+        res.json({
+
+            success: true,
+            product,
+            message: `Product deleted successfully.`,
+
+        });
+
+    } catch (error) {
+
+        console.error(error.message);
+
+        res.json({
+
+            success: false,
+            message: 'Failed to delete product.',
+            error: error.message,
+
+        });
+
+    }
+
+};
+
+// API To Get DashBoard Data
+
+export const getDashBoardData = async (req, res) => {
+
+    try {
+
+        const { _id, role } = req.user
+
+        if (role !== 'owner') {
+
+            return res.json({
+
+                success: false,
+                message: 'Unauthorized Owner.'
+
+            });
+
+        }
+
+        const products = await Product.find({ owner: _id })
+
+
+
+    } catch (error) {
+
+        console.error(error.message);
+
+        res.json({
+
+            success: false,
+            message: 'Failed to Fetch DashBoard Data.',
             error: error.message,
 
         });
@@ -224,5 +345,4 @@ export const toggleCarAvailability = async (req, res) => {
     }
 
 }
-
 
