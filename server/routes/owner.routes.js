@@ -1,6 +1,12 @@
 import express from 'express'
 import { protect } from '../middleware/auth.middleware.js';
-import { changeRoleToOwner, addNewProduct, getOwnerProducts } from '../controllers/owner.controller.js';
+import {
+    changeRoleToOwner,
+    addNewProduct,
+    getOwnerProducts,
+    toggleProductAvailability,
+    deleteProduct
+} from '../controllers/owner.controller.js';
 import Upload from '../middleware/multer.middleware.js'
 
 
@@ -17,5 +23,13 @@ ownerRouter.post('/add-product', Upload.single("image"), protect, addNewProduct)
 // GET Owner Product List
 
 ownerRouter.get('/get-products-list', protect, getOwnerProducts)
+
+// Toggle Product Availability
+
+ownerRouter.post('/toggle-product', protect, toggleProductAvailability)
+
+// Toggle Product Availability
+
+ownerRouter.post('/delete-product', protect, deleteProduct)
 
 export default ownerRouter
