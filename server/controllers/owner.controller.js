@@ -249,9 +249,9 @@ export const deleteProduct = async (req, res) => {
 
         const { _id } = req.user;
 
-        const { carId } = req.body;
+        const { productId } = req.body;
 
-        const product = await Product.findById(carId);
+        const product = await Product.findById(productId);
 
         if (!product) {
 
@@ -277,7 +277,9 @@ export const deleteProduct = async (req, res) => {
 
         }
 
-        product.owner = null
+        // Soft Delete
+
+        product.owner = process.env.DELETED_OWNER_ID;
 
         product.isAvaliable = false
 
