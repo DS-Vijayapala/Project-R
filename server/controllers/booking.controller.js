@@ -161,3 +161,39 @@ export const createBooking = async (req, res) => {
     }
 
 };
+
+// API To List User Bookings
+
+export const getUserBooking = async (req, res) => {
+
+    try {
+
+        const { _id } = req.user;
+
+        const bookings = await Booking.find({ user: _id })
+            .populate("product")
+            .sort({ createdAt: -1 });
+
+        res.json({
+
+            success: true,
+            bookings,
+            message: 'User bookings fetched successfully.',
+
+        });
+
+    } catch (error) {
+
+        console.error(error.message);
+
+        res.json({
+
+            success: false,
+            error: error.message,
+            message: 'Failed to fetch user bookings.',
+
+        });
+
+    }
+
+};
