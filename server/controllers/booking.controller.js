@@ -197,3 +197,50 @@ export const getUserBooking = async (req, res) => {
     }
 
 };
+
+
+// API To List Owner Bookings
+
+export const getOwnerBooking = async (req, res) => {
+
+    try {
+
+        if (req.user.role !== 'owner') {
+
+            return res.json({
+
+                success: false,
+                message: 'Not Authorized.',
+
+            });
+
+        }
+
+        const bookings = await Booking.find({ owner: req.user._id })
+            .populate('product user')
+            .select('-user.password')
+            .sort({ createdAt: -1 });
+
+        res.json({
+
+            success: true,
+            bookings,
+            message: 'Owner bookings fetched successfully.',
+
+        });
+
+    } catch (error) {
+
+        console.error(error.message);
+
+        res.json({
+
+            success: false,
+            error: error.message,
+            message: 'Failed to fetch owner bookings.',
+
+        });
+
+    }
+
+};
