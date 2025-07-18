@@ -77,3 +77,87 @@ export const getAvailableProducts = async (req, res) => {
     }
 
 };
+
+// API To Add Product Booking
+
+export const createBooking = async (req, res) => {
+
+    try {
+
+        const { product, pickupDate, returnDate } = req.body;
+
+        const { _id } = req.user;
+
+        // Check product existence and availability
+
+        const productData = await Product.findById(product);
+
+        if (!productData || !productData.isAvaliable) {
+
+            return res.json({
+
+                success: false,
+                message: 'Product not found.',
+
+            });
+
+        }
+
+        // Check if product is available for requested dates
+
+        const isAvailable = await checkAvailability(product, pickupDate, returnDate);
+
+        if (!isAvailable) {
+
+            return res.json({
+
+                success: false,
+                message: 'Product is already booked.',
+
+            });
+
+        }
+
+        // Calculate total price
+
+        const picked = new Date(pickupDate);
+        const returned = new Date(returnDate);
+        const noOfDays = Math.max(1, Math.ceil((returned - picked) / (1000 * 60 * 60 * 24)));
+        const price = productData.pricePerDay * noOfDays;
+
+        // Create booking
+
+        const booking = await Booking.create({
+
+            product,
+            user: _id,
+            owner: productData.owner,
+            pickupDate,
+            returnDate,
+            price,
+
+        });
+
+        res.json({
+
+            success: true,
+            booking,
+            message: 'Booking created successfully.',
+
+        });
+
+    } catch (error) {
+
+        console.error(error.message);
+
+        res.json({
+
+            success: false,
+            message: 'Failed to create booking. Try again later.',
+            error: error.message,
+
+        });
+
+    }
+
+};
