@@ -387,4 +387,96 @@ export const getDashBoardData = async (req, res) => {
 
 };
 
+// API To Update User Image
 
+export const updateUserImage = async (req, res) => {
+
+    try {
+
+        const { _id, name } = req.user;
+
+        const imageFile = req.file;
+
+        // Check if image was uploaded
+
+        if (!imageFile) {
+
+            return res.status(400).json({
+
+                success: false,
+                message: 'Please select an image to upload.',
+
+            });
+
+        }
+
+        // Prepare unique name for Cloudinary
+
+        const timestamp = Date.now();
+
+        const safeName = (name || 'user')
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '');
+
+        const uniqueName = `user-image-${safeName}-${timestamp}`;
+
+        // Upload to Cloudinary
+
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+
+            folder: 'rentzee/user-images',
+            public_id: uniqueName,
+            format: 'webp',
+            transformation: {
+                width: 400,
+                quality: 'auto'
+            },
+
+        });
+
+        const image = imageUpload.secure_url;
+
+        // Update user image in DB
+
+        const updatedUser = await User.findByIdAndUpdate(
+
+            _id,
+            { image },
+            { new: true, select: 'image name email' }
+
+        );
+
+        if (!updatedUser) {
+
+            return res.status(404).json({
+
+                success: false,
+                message: 'User not found. Unable to update image.',
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+            message: 'Profile image updated successfully.',
+            image: updatedUser.image,
+
+        });
+
+    } catch (error) {
+
+        console.error('Error updating user image:', error.message);
+
+        res.status(500).json({
+
+            success: false,
+            message: 'An unexpected error. Please try again later.',
+            error: error.message,
+
+        });
+
+    }
+
+};
