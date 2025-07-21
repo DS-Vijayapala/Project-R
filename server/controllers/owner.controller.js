@@ -1,5 +1,6 @@
 import User from "../models/user.model.js"
 import Product from "../models/products.model.js"
+import Booking from "../models/bookings.model.js"
 import { v2 as cloudinary } from 'cloudinary'
 
 // Change Role To Owner
@@ -315,36 +316,75 @@ export const getDashBoardData = async (req, res) => {
 
     try {
 
-        const { _id, role } = req.user
+        const { _id, role } = req.user;
+
+        // Check if the user is an owner
 
         if (role !== 'owner') {
 
-            return res.json({
+            return res.status(403).json({
 
                 success: false,
-                message: 'Unauthorized Owner.'
+                message: 'Access denied.'
 
             });
 
         }
 
-        const products = await Product.find({ owner: _id })
+        // Fetch all data in parallel for performance
 
+        const [products, bookings] = await Promise.all([
 
+            Product.find({ owner: _id }),
+            Booking.find({ owner: _id }).populate('product').sort({ createdAt: -1 })
 
-    } catch (error) {
+        ]);
 
-        console.error(error.message);
+        // Filter bookings in-memory instead of multiple DB queries
+
+        const pendingBookings = bookings.filter(booking => booking.status === 'pending');
+
+        const completedBookings = bookings.filter(booking => booking.status === 'confirmed');
+
+        // Calculate monthly revenue from confirmed bookings
+
+        const monthlyRevenue = completedBookings.reduce((acc, booking) => acc + booking.price, 0);
+
+        // Prepare dashboard data
+
+        const dashBoardData = {
+
+            totalProducts: products.length,
+            totalBookings: bookings.length,
+            pendingBookings: pendingBookings.length,
+            completedBookings: completedBookings.length,
+            recentBookings: bookings.slice(0, 3),
+            monthlyRevenue
+
+        };
 
         res.json({
 
+            success: true,
+            dashBoardData,
+            message: 'Dashboard data fetched successfully.'
+
+        });
+
+    } catch (error) {
+
+        console.error('Error fetching dashboard data:', error.message);
+
+        res.status(500).json({
+
             success: false,
-            message: 'Failed to Fetch DashBoard Data.',
-            error: error.message,
+            message: 'An unexpected error. Please try again later.',
+            error: error.message
 
         });
 
     }
 
-}
+};
+
 

@@ -5,7 +5,8 @@ import {
     addNewProduct,
     getOwnerProducts,
     toggleProductAvailability,
-    deleteProduct
+    deleteProduct,
+    getDashBoardData
 } from '../controllers/owner.controller.js';
 import Upload from '../middleware/multer.middleware.js'
 
@@ -31,5 +32,9 @@ ownerRouter.post('/toggle-product', protect, toggleProductAvailability)
 // Toggle Product Availability
 
 ownerRouter.post('/delete-product', protect, deleteProduct)
+
+//Get DashBoard Data
+
+ownerRouter.get('/dashboard-data', protect, getDashBoardData)
 
 export default ownerRouter
