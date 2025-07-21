@@ -244,3 +244,81 @@ export const getOwnerBooking = async (req, res) => {
     }
 
 };
+
+// API To Change Booking Status
+
+export const changeBookingStatus = async (req, res) => {
+
+    try {
+
+        const { _id } = req.user;
+
+        const { bookingId, status } = req.body;
+
+        // Check if bookingId and status are provided
+
+        if (!bookingId || !status) {
+
+            return res.status(400).json({
+
+                success: false,
+                message: "Booking ID and new status are required.",
+
+            });
+
+        }
+
+        // Find booking by ID
+
+        const booking = await Booking.findById(bookingId);
+
+        if (!booking) {
+
+            return res.status(404).json({
+
+                success: false,
+                message: "Booking not found.",
+
+            });
+
+        }
+
+        if (booking.owner.toString() !== _id.toString()) {
+
+            return res.status(403).json({
+
+                success: false,
+                message: "You are not authorized to change this booking's status.",
+
+            });
+
+        }
+
+        // Update booking status
+
+        booking.status = status;
+
+        await booking.save();
+
+        res.json({
+
+            success: true,
+            message: "Booking status updated successfully.",
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+
+            success: false,
+            message: "An unexpected error. Please try again later.",
+            error: error.message,
+
+        });
+
+    }
+
+};
