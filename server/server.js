@@ -8,6 +8,7 @@ import connectDB from './configs/db.js';
 import userRouter from './routes/user.routes.js';
 import ownerRouter from './routes/owner.routes.js';
 import connectCloudinary from './configs/cloudinary.js'
+import bookingRouter from './routes/booking.routes.js';
 
 // ─────────────────────────────────────────────────────
 // Initialize Express App
@@ -43,6 +44,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/user', userRouter)
 app.use('/api/owner', ownerRouter)
+app.use('/api/booking-data', bookingRouter)
 
 
 // ─────────────────────────────────────────────────────
