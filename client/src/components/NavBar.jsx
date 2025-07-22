@@ -4,14 +4,44 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { assets, links } from '../assets/assets';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
-const NavBar = ({ setShowLogin }) => {
+const NavBar = () => {
+
+    const { setshowLogin, user, logOut, isOwner, axios, setIsOwner, navigate } = useAppContext()
 
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const location = useLocation();
 
     const active = location.pathname;
+
+    const changeRole = async () => {
+
+        try {
+
+            const { data } = await axios.post('/api/owner/change-role')
+
+            if (data.success) {
+
+                setIsOwner(true)
+
+                toast.success(data.message)
+
+            } else {
+
+                toast.error(data.message)
+
+            }
+
+        } catch (error) {
+
+            toast.error(error.message)
+
+        }
+
+    }
 
     return (
 
@@ -94,30 +124,29 @@ const NavBar = ({ setShowLogin }) => {
 
                     {/* Dashboard */}
 
-                    <Link
-
-                        to="/owner"
+                    <button
+                        onClick={() => isOwner ? navigate('/owner') : changeRole()}
                         className={clsx(
-                            'text-sm font-medium transition-colors duration-300',
+                            'text-sm font-medium transition-colors duration-300 cursor-pointer',
                             active === '/dashboard'
                                 ? 'text-green-700'
                                 : 'text-slate-700 hover:text-green-700'
                         )}
 
                     >
-                        Dashboard
+                        {isOwner ? 'Dashboard' : 'List Products'}
 
-                    </Link>
+                    </button>
 
                     {/* Auth Button */}
 
                     <button
-                        onClick={() => setShowLogin(true)}
+                        onClick={() => { user ? logOut() : setshowLogin(true) }}
                         className="bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-full
                          hover:bg-green-700 transition-colors shadow-sm cursor-pointer"
                     >
 
-                        Sign Up
+                        {user ? 'Logout' : 'Login'}
 
                     </button>
 
