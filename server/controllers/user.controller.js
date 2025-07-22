@@ -178,4 +178,33 @@ export const getUserData = async (req, res) => {
 
 };
 
+// Get All Products For The FrontEnd
+
+export const getAllProducts = async (req, res) => {
+
+    try {
+
+        const products = await Product.find({ isAvaliable: true })
+
+        res.status(200).json({
+
+            success: true,
+            products,
+
+        });
+
+    } catch (error) {
+
+        console.log(error.message);
+
+        res.json({
+
+            success: false,
+            message: 'Failed to fetch Product data',
+
+        });
+
+    }
+
+}
 
