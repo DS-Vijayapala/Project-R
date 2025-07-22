@@ -1,6 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
-const Login = ({ setShowLogin }) => {
+const Login = () => {
+
+    const { showLogin, setshowLogin, axios, setToken, navigate } = useAppContext()
 
     const [state, setState] = useState("login");
     const [name, setName] = useState("");
@@ -9,14 +13,64 @@ const Login = ({ setShowLogin }) => {
 
     const onSubmitHandler = async (event) => {
 
-        event.preventDefault();
+        try {
+
+            event.preventDefault();
+
+            const { data } = await axios.post(`/api/user/${state}`,
+                { name, email, password }
+            )
+
+            if (data.success) {
+
+                navigate('/')
+
+                setToken(data.token)
+
+                localStorage.setItem('token', data.token)
+
+                toast.success(data.message)
+
+                setshowLogin(false)
+
+            } else {
+
+                toast.error(data.message)
+
+            }
+
+        } catch (error) {
+
+        }
+
+
 
     };
+
+    useEffect(() => {
+
+        if (showLogin) {
+
+            document.body.style.overflow = 'hidden';
+
+        } else {
+
+            document.body.style.overflow = 'auto';
+
+        }
+
+        return () => {
+
+            document.body.style.overflow = 'auto';
+
+        };
+
+    }, [showLogin]);
 
     return (
 
         <div
-            onClick={() => setShowLogin(false)}
+            onClick={() => setshowLogin(false)}
             className='fixed top-0 bottom-0 left-0 right-0 z-100 flex items-center
             text-sm text-gray-600 bg-black/50'>
 
@@ -113,7 +167,7 @@ const Login = ({ setShowLogin }) => {
                 <button
                     type="submit"
                     className="bg-green-600 hover:bg-green-700 transition-all 
-                    text-white w-full py-2 rounded-md font-medium"
+                    text-white w-full py-2 rounded-md font-medium cursor-pointer"
                 >
 
                     {state === "register" ? "Create Account" : "Login"}
