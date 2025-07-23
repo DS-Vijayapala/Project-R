@@ -1,10 +1,10 @@
 import React from 'react'
-import { dummyUserData } from '../../assets/assets';
 import { Link } from 'react-router-dom'
+import { useAppContext } from '../../context/AppContext'
 
 const NavBarOwner = () => {
 
-    const user = dummyUserData;
+    const { user } = useAppContext()
 
     return (
 
@@ -30,7 +30,7 @@ const NavBarOwner = () => {
 
             <p className='text-sm md:text-base font-medium text-gray-600'>
 
-                Welcome, <span className='text-gray-900'>{user.name || "Owner"}</span>
+                Welcome, <span className='text-gray-900'>{user?.name || "Owner"}</span>
 
             </p>
 
