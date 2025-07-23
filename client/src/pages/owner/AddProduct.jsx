@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import Title from '../../components/owner/Title'
 import { assets } from '../../assets/assets'
+import { useAppContext } from '../../context/AppContext'
+import toast from 'react-hot-toast'
 
 const AddProduct = () => {
 
-    const currency = import.meta.env.VITE_CURRENCY
+    const { axios, currency } = useAppContext()
 
     const [image, setImage] = useState(null)
 
@@ -23,10 +25,65 @@ const AddProduct = () => {
 
     })
 
+    const [isLoading, setIsLoading] = useState(false)
+
     const onSubmitHandler = async (e) => {
 
         e.preventDefault()
 
+        if (isLoading) {
+
+            return null
+
+        }
+
+        setIsLoading(true)
+
+        try {
+
+            const formData = new FormData()
+
+            formData.append('image', image)
+
+            formData.append('productData', JSON.stringify(card))
+
+            const { data } = await axios.post('/api/owner/add-product', formData)
+
+            if (data.success) {
+
+                toast.success(data.message)
+
+                setImage('')
+
+                setCard({
+
+                    brand: '',
+                    model: '',
+                    year: 0,
+                    pricePerDay: 0,
+                    category: '',
+                    transmission: '',
+                    fuel_type: '',
+                    seating_capacity: 0,
+                    location: '',
+                    description: ''
+
+                })
+
+            } else {
+
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+
+            toast.error(data.message)
+
+        } finally {
+
+            setIsLoading(false)
+
+        }
 
     }
 
@@ -127,6 +184,7 @@ const AddProduct = () => {
                         <label className='font-medium text-green-800'>Year</label>
 
                         <input
+                            min={0}
                             type="number"
                             placeholder="e.g. 2023"
                             value={card.year}
@@ -143,6 +201,7 @@ const AddProduct = () => {
                         <label className='font-medium text-green-800'>Price Per Day ({currency})</label>
 
                         <input
+                            min={0}
                             type="number"
                             placeholder="e.g. 4500"
                             value={card.pricePerDay}
@@ -227,6 +286,7 @@ const AddProduct = () => {
                         <label className='font-medium text-green-800'>Seating Capacity</label>
 
                         <input
+                            min={0}
                             type="number"
                             placeholder="e.g. 4"
                             value={card.seating_capacity}
@@ -286,12 +346,12 @@ const AddProduct = () => {
 
                 <button
                     type="submit"
-                    className='flex items-center gap-2 px-6 py-3 mt-6 bg-green-600 
+                    className='flex items-center gap-2 px-6 py-3 mt-6 bg-green-600 cursor-pointer
                     text-white font-medium rounded-lg hover:bg-green-700 transition-all w-fit'>
 
                     <img src={assets.tick_icon} alt="tick_icon" className='h-5' />
 
-                    Add Product
+                    {isLoading ? 'Adding...' : 'Add Product'}
 
                 </button>
 
