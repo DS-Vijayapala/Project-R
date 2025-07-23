@@ -1,23 +1,100 @@
 import React, { useEffect, useState } from 'react'
-import { assets, dummyCarData } from '../../assets/assets'
+import { assets } from '../../assets/assets'
 import Title from '../../components/owner/Title'
+import { useAppContext } from '../../context/AppContext'
+import toast from 'react-hot-toast'
 
 const ManageProducts = () => {
 
-    const currency = import.meta.env.VITE_CURRENCY
+    const { axios, currency, isOwner } = useAppContext()
 
     const [Product, setProduct] = useState([])
 
     const fetchOwnerProducts = async () => {
 
-        setProduct(dummyCarData)
+        try {
+
+            const { data } = await axios.get('/api/owner/get-products-list')
+
+            if (data.success) {
+
+                setProduct(data.products)
+
+            } else {
+
+                toast.error(data.message)
+
+            }
+
+        } catch (error) {
+
+            toast.error(data.message)
+
+        }
+
+    }
+
+    const toggleAvailability = async (productId) => {
+
+        try {
+
+            const { data } = await axios.post('/api/owner/toggle-product', { productId })
+
+            if (data.success) {
+
+                toast.success(data.message)
+
+                fetchOwnerProducts()
+
+            } else {
+
+                toast.error(data.message)
+
+            }
+
+        } catch (error) {
+
+            toast.error(data.message)
+
+        }
+
+    }
+
+    const deleteProduct = async (productId) => {
+
+        try {
+
+            const confirm = window.confirm('Are You Want To Delete This Car ?')
+
+            if (!confirm) return null
+
+            const { data } = await axios.post('/api/owner/delete-product', { productId })
+
+            if (data.success) {
+
+                toast.success(data.message)
+
+                fetchOwnerProducts()
+
+            } else {
+
+                toast.error(data.message)
+
+            }
+
+        } catch (error) {
+
+            toast.error(data.message)
+
+        }
+
     }
 
     useEffect(() => {
 
-        fetchOwnerProducts()
+        isOwner && fetchOwnerProducts()
 
-    }, [])
+    }, [isOwner])
 
     return (
 
@@ -128,12 +205,14 @@ const ManageProducts = () => {
                                 <td className='p-4 flex gap-3 items-center'>
 
                                     <img
+                                        onClick={() => toggleAvailability(product._id)}
                                         src={product.isAvaliable ? assets.eye_close_icon : assets.eye_icon}
                                         alt="toggle-availability"
                                         className='cursor-pointer hover:scale-110 transition'
                                     />
 
                                     <img
+                                        onClick={() => deleteProduct(product._id)}
                                         src={assets.delete_icon}
                                         alt="delete-product"
                                         className='cursor-pointer hover:scale-110 transition'
