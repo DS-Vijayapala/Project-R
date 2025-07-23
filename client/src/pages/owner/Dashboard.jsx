@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { assets, dummyDashboardData } from '../../assets/assets'
 import Title from '../../components/owner/Title'
+import { useAppContext } from '../../context/AppContext'
+import toast from 'react-hot-toast'
 
 const Dashboard = () => {
 
-    const currency = import.meta.env.VITE_CURRENCY
+
+    const { axios, isOwner, currency } = useAppContext()
 
     const [data, setData] = useState({
-        totalCars: 0,
+        totalProducts: 0,
         totalBookings: 0,
         pendingBookings: 0,
         completedBookings: 0,
@@ -18,18 +21,45 @@ const Dashboard = () => {
 
     const dashboardCards = [
 
-        { title: "Total Products", value: data.totalCars, icon: assets.calendar_icon_colored },
+        { title: "Total Products", value: data.totalProducts, icon: assets.calendar_icon_colored },
         { title: "Total Bookings", value: data.totalBookings, icon: assets.listIconColored },
         { title: "Pending", value: data.pendingBookings, icon: assets.cautionIconColored },
         { title: "Confirmed", value: data.completedBookings, icon: assets.listIconColored },
 
     ]
 
+    const fetchDashboardData = async () => {
+
+        try {
+
+            const { data } = await axios.get('/api/owner/dashboard-data')
+
+            if (data.success) {
+
+                setData(data.dashBoardData)
+
+            } else {
+
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+
+            toast.error(data.message)
+
+        }
+
+    }
+
     useEffect(() => {
 
-        setData(dummyDashboardData)
+        if (isOwner) {
 
-    }, [])
+            fetchDashboardData()
+
+        }
+
+    }, [isOwner])
 
     return (
 
@@ -105,7 +135,7 @@ const Dashboard = () => {
 
                                     <p className='font-medium text-gray-700'>
 
-                                        {booking.car.brand} {booking.car.model}
+                                        {booking.product.brand} {booking.product.model}
 
                                     </p>
 
