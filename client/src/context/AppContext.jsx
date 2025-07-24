@@ -54,7 +54,7 @@ export const AppProvider = ({ children }) => {
 
     }
 
-    // Function To Fetch All Cars From The Server
+    // Function To Fetch All Product From The Server
 
     const fetchProducts = async () => {
 
