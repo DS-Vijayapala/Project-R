@@ -20,7 +20,7 @@ const checkAvailability = async (product, pickupDate, returnDate) => {
 
 };
 
-// API To Check Availability Of Products For The Given Date And Location
+// API To Check Availability Of Products For The Given PickUp Date , Return Date And Location
 
 export const getAvailableProducts = async (req, res) => {
 
@@ -40,24 +40,25 @@ export const getAvailableProducts = async (req, res) => {
 
         const products = await Product.find({ location, isAvaliable: true });
 
-        const availableProducts = [];
 
-        for (const product of products) {
+        // check Product availability for the give date range using promise
 
-            const isAvailable = await checkAvailability(product._id, pickupDate, returnDate);
+        const availableProductPromises = products.map(async (product) => {
 
-            if (isAvailable) {
+            const isAvaliable = await checkAvailability(product._id, pickupDate, returnDate)
 
-                availableProducts.push(product);
+            return { ...product._doc, isAvaliable: isAvaliable }
 
-            }
+        })
 
-        }
+        let availableProducts = await Promise.all(availableProductPromises)
+
+        availableProducts = availableProducts.filter(product => product.isAvaliable === true)
 
         res.json({
 
             success: true,
-            products: availableProducts,
+            availableProducts,
             message: 'Available products fetched successfully.',
 
         });
