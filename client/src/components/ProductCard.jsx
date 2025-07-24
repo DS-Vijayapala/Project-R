@@ -83,7 +83,7 @@ const ProductCard = ({ product }) => {
 
                         <img src={assets.users_icon} alt="capacity" className="h-4" />
 
-                        <span>{product.capacity} Capacity</span>
+                        <span>{product.seating_capacity} Capacity</span>
 
                     </div>
 

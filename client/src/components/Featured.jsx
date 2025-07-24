@@ -3,10 +3,13 @@ import Title from './Title'
 import { assets, dummyCarData } from '../assets/assets'
 import ProductCard from './ProductCard'
 import { useNavigate } from 'react-router-dom'
+import { useAppContext } from '../context/AppContext'
 
 const Featured = () => {
 
     const navigate = useNavigate()
+
+    const { products } = useAppContext()
 
     return (
 
@@ -24,7 +27,7 @@ const Featured = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-16 w-full">
 
-                {dummyCarData.slice(0, 3).map((product) => (
+                {products.slice(0, 3).map((product) => (
 
                     <div
                         key={product._id}
