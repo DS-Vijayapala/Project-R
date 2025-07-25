@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { assets, dummyCarData } from '../assets/assets'
 import Loader from '../components/Loader'
+import { useAppContext } from '../context/AppContext'
+import toast from 'react-hot-toast'
 
 const ProductDetails = () => {
 
     const { id } = useParams()
+
+    const { products, axios, pickupDate, setPickupDate, returnDate, setreturnDate } = useAppContext()
 
     const navigate = useNavigate()
 
@@ -17,13 +21,36 @@ const ProductDetails = () => {
 
         e.preventDefault();
 
+        try {
+
+            const { data } = await axios.post('/api/booking-data/create-booking',
+                { product: id, pickupDate, returnDate })
+
+            if (data.success) {
+
+                toast.success(data.message)
+
+                navigate('/my-bookings')
+
+            } else {
+
+                toast.error(data.message)
+
+            }
+
+        } catch (error) {
+
+            toast.error(data.message)
+
+        }
+
     }
 
     useEffect(() => {
 
-        setProduct(dummyCarData.find(Product => Product._id === id))
+        setProduct(products.find(Product => Product._id === id))
 
-    }, [id])
+    }, products, [id])
 
     return Product ? (
 
@@ -174,6 +201,8 @@ const ProductDetails = () => {
                             className="text-sm font-medium text-slate-700">Pickup Date</label>
 
                         <input
+                            value={pickupDate}
+                            onChange={(e) => setPickupDate(e.target.value)}
                             id="pickup-date"
                             type="date"
                             min={new Date().toISOString().split('T')[0]}
@@ -190,6 +219,8 @@ const ProductDetails = () => {
                             className="text-sm font-medium text-slate-700">Return Date</label>
 
                         <input
+                            value={returnDate}
+                            onChange={(e) => setreturnDate(e.target.value)}
                             id="return-date"
                             type="date"
                             className="border border-gray-300 px-3 py-2
