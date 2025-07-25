@@ -50,7 +50,7 @@ const ProductDetails = () => {
 
         setProduct(products.find(Product => Product._id === id))
 
-    }, products, [id])
+    }, [products, id])
 
     return Product ? (
 
