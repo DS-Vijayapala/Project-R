@@ -4,10 +4,12 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { assets, links } from '../assets/assets';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
+const NavBar = () => {
 
-
-const NavBar = ({ setShowLogin }) => {
+    const { setshowLogin, user, logOut, isOwner, axios, setIsOwner, navigate } = useAppContext()
 
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -15,16 +17,42 @@ const NavBar = ({ setShowLogin }) => {
 
     const active = location.pathname;
 
+    const changeRole = async () => {
+
+        try {
+
+            const { data } = await axios.post('/api/owner/change-role')
+
+            if (data.success) {
+
+                setIsOwner(true)
+
+                toast.success(data.message)
+
+            } else {
+
+                toast.error(data.message)
+
+            }
+
+        } catch (error) {
+
+            toast.error(error.message)
+
+        }
+
+    }
+
     return (
 
-        <header className="sticky top-0 z-50 bg-gray-100 text-gray-900 shadow-sm">
+        <header className="sticky top-0 z-50 bg-white text-slate-800 shadow-sm border-b border-green-100">
 
             <nav
-                className="max-w-7xl mx-auto flex items-center justify-between gap-4 px-4 
-                sm:px-6 lg:px-8 h-16"
+                className="max-w-7xl mx-auto flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 h-16"
                 aria-label="Main navigation"
             >
-                {/* Left: Logo */}
+
+                {/* Logo */}
 
                 <div className="flex items-center flex-shrink-0">
 
@@ -42,7 +70,7 @@ const NavBar = ({ setShowLogin }) => {
 
                 </div>
 
-                {/* Center: Search */}
+                {/* Search */}
 
                 <div className="hidden md:flex flex-1 justify-center">
 
@@ -51,10 +79,7 @@ const NavBar = ({ setShowLogin }) => {
                         <input
                             type="text"
                             placeholder="Search items..."
-                            className="w-full px-4 py-2 text-sm border border-gray-300 
-                            rounded-full shadow-sm 
-                            focus:outline-none focus:ring-1 focus:ring-indigo-500
-                             focus:border-indigo-500"
+                            className="w-full px-4 py-2 text-sm border border-green-200 rounded-full shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
                         />
 
                         <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
@@ -67,11 +92,11 @@ const NavBar = ({ setShowLogin }) => {
 
                 </div>
 
-                {/* Right: Navigation + Auth Buttons */}
+                {/* Desktop Nav */}
 
                 <div className="hidden md:flex items-center gap-6 flex-shrink-0">
 
-                    {/* Nav Links */}
+                    {/* Links */}
 
                     <div className="flex gap-4">
 
@@ -83,12 +108,10 @@ const NavBar = ({ setShowLogin }) => {
                                 className={clsx(
                                     'text-sm font-medium transition-colors duration-300',
                                     link.path === active
-                                        ? 'text-indigo-600'
-                                        : 'text-gray-700 hover:text-indigo-600'
+                                        ? 'text-green-700'
+                                        : 'text-slate-700 hover:text-green-700'
                                 )}
-
                                 aria-current={link.path === active ? 'page' : undefined}
-
                             >
 
                                 {link.name}
@@ -99,29 +122,31 @@ const NavBar = ({ setShowLogin }) => {
 
                     </div>
 
-                    {/* Auth */}
-
-                    <Link
-                        to="/owner"
-                        className={clsx(
-                            'text-sm font-medium transition-colors duration-300',
-                            active === '/dashboard'
-                                ? 'text-indigo-600'
-                                : 'text-gray-700 hover:text-indigo-600'
-                        )}
-                    >
-
-                        Dashboard
-
-                    </Link>
+                    {/* Dashboard */}
 
                     <button
-                        onClick={() => setShowLogin(true)}
-                        className="bg-indigo-600 text-white text-sm font-medium 
-                        px-4 py-2 rounded hover:bg-indigo-700 transition-colors"
+                        onClick={() => isOwner ? navigate('/owner') : changeRole()}
+                        className={clsx(
+                            'text-sm font-medium transition-colors duration-300 cursor-pointer',
+                            active === '/dashboard'
+                                ? 'text-green-700'
+                                : 'text-slate-700 hover:text-green-700'
+                        )}
+
+                    >
+                        {isOwner ? 'Dashboard' : 'List Products'}
+
+                    </button>
+
+                    {/* Auth Button */}
+
+                    <button
+                        onClick={() => { user ? logOut() : setshowLogin(true) }}
+                        className="bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-full
+                         hover:bg-green-700 transition-colors shadow-sm cursor-pointer"
                     >
 
-                        Sign Up
+                        {user ? 'Logout' : 'Login'}
 
                     </button>
 
@@ -130,11 +155,9 @@ const NavBar = ({ setShowLogin }) => {
                 {/* Mobile Toggle */}
 
                 <button
-                    className="md:hidden p-2 rounded text-gray-700 focus:outline-none 
-                    focus:ring-2 focus:ring-indigo-600"
+                    className="md:hidden p-2 rounded text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                     aria-label="Toggle menu"
                     onClick={() => setMobileOpen((prev) => !prev)}
-
                 >
 
                     {mobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -155,7 +178,7 @@ const NavBar = ({ setShowLogin }) => {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="md:hidden bg-gray-100 px-4 pb-4"
+                        className="md:hidden bg-green-50 px-4 pb-4"
                     >
 
                         <div className="flex flex-col space-y-3">
@@ -163,18 +186,15 @@ const NavBar = ({ setShowLogin }) => {
                             {links.map((link) => (
 
                                 <Link
-
                                     key={link.path}
                                     to={link.path}
                                     className={clsx(
                                         'text-sm font-medium transition-colors duration-300',
                                         link.path === active
-                                            ? 'text-indigo-600'
-                                            : 'text-gray-700 hover:text-indigo-600'
+                                            ? 'text-green-700'
+                                            : 'text-slate-700 hover:text-green-700'
                                     )}
-
                                     onClick={() => setMobileOpen(false)}
-
                                 >
 
                                     {link.name}
@@ -183,14 +203,12 @@ const NavBar = ({ setShowLogin }) => {
 
                             ))}
 
-                            <hr className="border-gray-200" />
+                            <hr className="border-green-100" />
 
                             <Link
-
-                                to="/owner/dashboard"
-                                className="text-sm font-medium text-gray-700 hover:text-indigo-600"
+                                to="/owner"
+                                className="text-sm font-medium text-slate-700 hover:text-green-700"
                                 onClick={() => setMobileOpen(false)}
-
                             >
 
                                 Dashboard
@@ -198,11 +216,14 @@ const NavBar = ({ setShowLogin }) => {
                             </Link>
 
                             <button
-                                to="/register"
-                                className="bg-indigo-600 text-white text-sm font-medium 
-                                        px-4 py-2 rounded hover:bg-indigo-700 transition-colors"
-                                onClick={() => setMobileOpen(false)}
 
+                                onClick={() => {
+
+                                    setShowLogin(true);
+                                    setMobileOpen(false);
+                                }}
+                                className="bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-full
+                                 hover:bg-green-700 transition-colors shadow-sm"
                             >
 
                                 Sign Up
