@@ -103,7 +103,7 @@ const ManageBookings = () => {
                                 <td className='p-4 flex items-center gap-4'>
 
                                     <img
-                                        src={bookings.car.image}
+                                        src={bookings.product.image}
                                         alt="car"
                                         className='h-12 w-12 rounded-lg object-cover border border-gray-300'
                                     />
@@ -112,7 +112,7 @@ const ManageBookings = () => {
 
                                         <p className='font-semibold text-slate-800'>
 
-                                            {bookings.car.brand} {bookings.car.model}
+                                            {bookings.product.brand} {bookings.product.model}
 
                                         </p>
 
