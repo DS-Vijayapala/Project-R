@@ -1,24 +1,43 @@
 import React, { useEffect, useState } from 'react'
-import { assets, dummyMyBookingsData } from '../assets/assets'
+import { assets } from '../assets/assets'
 import Title from '../components/Title'
+import { useAppContext } from '../context/AppContext'
 
 const MyBookings = () => {
 
-    const currency = import.meta.env.VITE_CURRENCY
+    const { user, axios, currency } = useAppContext()
 
     const [Bookings, setBookings] = useState([])
 
     const fetchMyBookings = async () => {
 
-        setBookings(dummyMyBookingsData)
+        try {
+
+            const { data } = await axios.get('/api/booking-data/list-user-bookings')
+
+            if (data.success) {
+
+                setBookings(data.bookings)
+
+            } else {
+
+                toast.error(data.message)
+
+            }
+
+        } catch (error) {
+
+            toast.error(data.message)
+
+        }
 
     }
 
     useEffect(() => {
 
-        fetchMyBookings()
+        user && fetchMyBookings()
 
-    }, [])
+    }, [user])
 
     return (
 
@@ -41,7 +60,7 @@ const MyBookings = () => {
                             <div className='rounded-md overflow-hidden mb-3'>
 
                                 <img
-                                    src={booking.car.image}
+                                    src={booking.product.image}
                                     alt="product"
                                     className='w-full h-auto aspect-video object-cover'
 
@@ -49,9 +68,9 @@ const MyBookings = () => {
 
                             </div>
 
-                            <p className='text-lg font-medium mt-2'>{booking.car.brand} {booking.car.model}</p>
+                            <p className='text-lg font-medium mt-2'>{booking.product.brand} {booking.product.model}</p>
 
-                            <p className='text-gray-500'>{booking.car.year} {booking.car.category} - {booking.car.location}</p>
+                            <p className='text-gray-500'>{booking.product.year} {booking.product.category} - {booking.product.location}</p>
 
                         </div>
 
@@ -112,7 +131,7 @@ const MyBookings = () => {
                                 <div>
                                     <p className='text-gray-500 text-sm'>Pick-Up Location</p>
 
-                                    <p className='text-gray-700 font-medium'>{booking.car.location}</p>
+                                    <p className='text-gray-700 font-medium'>{booking.product.location}</p>
 
                                 </div>
 
