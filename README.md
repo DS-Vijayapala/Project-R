@@ -1,6 +1,6 @@
-# Renze
+# Rentzee
 
-**Renze** is a modern MERN stack web application that enables users to rent and lease items such as cars, motorbikes, generators, and more. Built with a focus on simplicity, performance, and user experience.
+**Rentzee** is a modern MERN stack web application that enables users to rent and lease items such as cars, motorbikes, generators, and more. Built with a focus on simplicity, performance, and user experience.
 
 ---
 
@@ -48,12 +48,6 @@ renze/
 ├── .env
 └── README.md
 ```
-
----
-
-## 📸 Screenshots
-
-*Add some UI screenshots here if available.*
 
 ---
 
